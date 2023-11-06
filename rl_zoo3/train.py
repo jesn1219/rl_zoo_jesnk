@@ -206,6 +206,7 @@ def train() -> None:
 
         run_name = f"{args.env}__{args.algo}__{args.seed}__{int(time.time())}"
         tags = [*args.wandb_tags, f"v{sb3.__version__}"]
+        print(vars(args))
         run = wandb.init(
             name=run_name,
             project=args.wandb_project_name,
@@ -261,6 +262,7 @@ def train() -> None:
     results = exp_manager.setup_experiment()
     if results is not None:
         model, saved_hyperparams = results
+        wandb.config.update({"saved_hyperparams": dict(saved_hyperparams)}) #jskang
         if args.track:
             # we need to save the loaded hyperparameters
             args.saved_hyperparams = saved_hyperparams
