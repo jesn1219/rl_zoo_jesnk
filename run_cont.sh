@@ -45,10 +45,11 @@ while true; do
         run_gpu_occupied=$((gpu_ram_before_run - gpu_ram_after_run))
 
         # Update the occupied_ram for the next iteration
-        occupied_ram=$((occupied_ram + run_gpu_occupied))
+        occupied_ram=$((run_gpu_occupied))
 
         echo "Memory occupied by 'run.sh': $run_gpu_occupied MB"
     else
-        echo "Not enough memory to run 'run.sh'."
+        echo "Not enough memory to run 'run.sh'. gpu_ram_available: $gpu_ram_available, total_memory_required: $total_memory_required"
+        sleep 30
     fi
 done
