@@ -1,0 +1,1 @@
+python ./train.py --env PointMaze_Large-v3 --algo tqc  --wandb-project-name baselines --track --save-freq 100000 --save-replay-buffer -tags maze 

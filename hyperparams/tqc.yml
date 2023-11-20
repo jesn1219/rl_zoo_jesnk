@@ -217,7 +217,7 @@ FetchPickAndPlace-v1:
   normalize: False
 
 FetchPickAndPlace-v2:
-  batch_size: 512
+  batch_size: 2048
   buffer_size: 1000000
   gamma: 0.98
   learning_rate: 0.001
@@ -307,3 +307,22 @@ RocketLander-v0:
         skip: 4
     - rl_zoo3.wrappers.HistoryWrapper:
         horizon: 2
+
+
+# jskang : maze
+PointMaze_Large-v3:
+  batch_size: 512
+  buffer_size: 1000000
+  gamma: 0.98
+  learning_rate: 0.001
+  n_timesteps: 1000000.0
+  tau: 0.005
+  learning_starts: 10000
+  policy: 'MultiInputPolicy'
+  policy_kwargs: "dict(net_arch=[512, 512, 512], n_critics=2)"
+  replay_buffer_class: HerReplayBuffer
+  replay_buffer_kwargs: "dict(
+    goal_selection_strategy='future',
+    n_sampled_goal=4,
+  )"
+  normalize: False
