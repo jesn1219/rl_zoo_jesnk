@@ -6,5 +6,5 @@ python ./train.py \
 --save-freq 1000 \
 --save-replay-buffer \
 --env-kwargs continuing_task:False \
--tags maze,no_continuing_task,te07 \
--params n_timesteps:1000000 target_entropy:0.7
+-tags maze,no_continuing_task,g0999 \
+-params n_timesteps:1000000 gamma:0.999
