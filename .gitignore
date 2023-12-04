@@ -1,5 +1,7 @@
 __pycache__/
 logs
+stable_baselines3_backup
+stable_baselines3
 .pytest_cache/
 .coverage
 .coverage.*

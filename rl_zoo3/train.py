@@ -17,7 +17,7 @@ from rl_zoo3.exp_manager import ExperimentManager
 from rl_zoo3.utils import ALGOS, StoreDict
 
 
-def train() -> None:
+def train(args=None) -> None: # jesnk: args=None modified
     parser = argparse.ArgumentParser()
     parser.add_argument("--algo", help="RL Algorithm", default="ppo", type=str, required=False, choices=list(ALGOS.keys()))
     parser.add_argument("--env", type=str, default="CartPole-v1", help="environment ID")
@@ -157,7 +157,11 @@ def train() -> None:
         "-tags", "--wandb-tags", type=str, default=[], nargs="+", help="Tags for wandb run, e.g.: -tags optimized pr-123"
     )
 
-    args = parser.parse_args()
+    # jesnk
+    if args is not None :
+        args = parser.parse_args(args)
+    else :
+        args = parser.parse_args()
 
     # Going through custom gym packages to let them register in the global registory
     for env_module in args.gym_packages:
@@ -262,9 +266,9 @@ def train() -> None:
     results = exp_manager.setup_experiment()
     if results is not None:
         model, saved_hyperparams = results
-        wandb.config.update({"saved_hyperparams": dict(saved_hyperparams)}) #jskang
         if args.track:
             # we need to save the loaded hyperparameters
+            wandb.config.update({"saved_hyperparams": dict(saved_hyperparams)}) #jskang
             args.saved_hyperparams = saved_hyperparams
             assert run is not None  # make mypy happy
             run.config.setdefaults(vars(args))
