@@ -336,7 +336,7 @@ PointMaze_UMaze-v3:
   learning_rate: 0.001
   n_timesteps: 1000000.0
   tau: 0.005
-  learning_starts: 500
+  learning_starts: 10000
   policy: 'MultiInputPolicy'
   policy_kwargs: "dict(net_arch=[512, 512, 512], n_critics=2)"
   replay_buffer_class: HerReplayBuffer
