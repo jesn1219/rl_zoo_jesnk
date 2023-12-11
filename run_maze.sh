@@ -3,8 +3,8 @@ python ./train.py \
 --algo tqc \
 --wandb-project-name baselines \
 --track \
---save-freq 1000 \
+--save-freq 10000 \
 --save-replay-buffer \
 --env-kwargs continuing_task:False \
--tags maze,no_continuing_task,g095,attention_v1 \
--params n_timesteps:1000000 gamma:0.95
+-tags maze,no_continuing_task,g098 \
+-params n_timesteps:1000000 gamma:0.98
