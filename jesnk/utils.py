@@ -301,7 +301,7 @@ def enjoy(args) -> None:  # noqa: C901
                         episode_reward, ep_len = 0.0, 0
                 
                 if done :
-                    plot_qvalue(initial_agent_pos, desired_goal)
+                    #plot_qvalue(initial_agent_pos, desired_goal)
                     initial_agent_pos = None
                 
         media.show_video(frames, fps=30)
