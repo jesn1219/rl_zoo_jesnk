@@ -669,3 +669,145 @@ if __name__ == '__main__' :
     args.n_timesteps = 4000
     args.device = 'cuda'
     data = rollout_trajectory(args)
+
+
+def import_offline_data(data_id='maze2d-umaze-v1') :
+    if data_id == 'maze2d-umaze-v1' :
+        data_url = 'http://rail.eecs.berkeley.edu/datasets/offline_rl/maze2d/maze2d-umaze-sparse-v1.hdf5'
+        data_path = 'offline_data/'
+        # get data if needed
+        import os
+        if not os.path.exists(data_path+data_id+'.hdf5'):
+            print('downloading data')
+            import urllib.request
+            urllib.request.urlretrieve(data_url, data_path+data_id+'.hdf5')
+    else :
+        raise NotImplementedError
+     
+    # check if h5py is installed
+    import h5py
+
+    # check data
+    data = h5py.File(data_path+data_id+'.hdf5', 'r')
+    print('keys in data:', list(data.keys()))
+    return data
+
+def setting_ipynb_mujoco() :
+    import distutils.util
+    import os
+    import subprocess
+    
+    
+    if subprocess.run('nvidia-smi', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
+        raise RuntimeError(
+            'Cannot communicate with GPU. '
+            'Make sure you are using a GPU Colab runtime. '
+            'Go to the Runtime menu and select Choose runtime type.')
+
+    NVIDIA_ICD_CONFIG_PATH = '/usr/share/glvnd/egl_vendor.d/10_nvidia.json'
+    if not os.path.exists(NVIDIA_ICD_CONFIG_PATH):
+        with open(NVIDIA_ICD_CONFIG_PATH, 'w') as f:
+            f.write("""{
+            "file_format_version" : "1.0.0",
+            "ICD" : {
+                "library_path" : "libEGL_nvidia.so.0"
+            }
+    }
+    """)
+
+    # Configure MuJoCo to use the EGL rendering backend (requires GPU)
+    # set the environment variable
+    os.environ['MUJOCO_GL'] = 'egl'
+
+    try:
+        print('Checking that the installation succeeded:')
+        import mujoco
+        mujoco.MjModel.from_xml_string('<mujoco/>')
+    except Exception as e:
+        raise e from RuntimeError(
+            'Something went wrong during installation. Check the shell output above '
+            'for more information.\n'
+            'If using a hosted Colab runtime, make sure you enable GPU acceleration '
+            'by going to the Runtime menu and selecting "Choose runtime type".')
+
+    #@title Import packages for plotting and creating graphics
+    import time
+    import itertools
+    import numpy as np
+    from typing import Callable, NamedTuple, Optional, Union, List
+
+    import mediapy as media
+    import matplotlib.pyplot as plt
+
+    # More legible printing from numpy.
+    np.set_printoptions(precision=3, suppress=True, linewidth=100)
+    
+
+
+
+
+
+'''
+#@title Check if installation was successful
+
+#from google.colab import files
+
+import distutils.util
+import os
+import subprocess
+if subprocess.run('nvidia-smi').returncode:
+  raise RuntimeError(
+      'Cannot communicate with GPU. '
+      'Make sure you are using a GPU Colab runtime. '
+      'Go to the Runtime menu and select Choose runtime type.')
+
+# Add an ICD config so that glvnd can pick up the Nvidia EGL driver.
+# This is usually installed as part of an Nvidia driver package, but the Colab
+# kernel doesn't install its driver via APT, and as a result the ICD is missing.
+# (https://github.com/NVIDIA/libglvnd/blob/master/src/EGL/icd_enumeration.md)
+NVIDIA_ICD_CONFIG_PATH = '/usr/share/glvnd/egl_vendor.d/10_nvidia.json'
+if not os.path.exists(NVIDIA_ICD_CONFIG_PATH):
+  with open(NVIDIA_ICD_CONFIG_PATH, 'w') as f:
+    f.write("""{
+    "file_format_version" : "1.0.0",
+    "ICD" : {
+        "library_path" : "libEGL_nvidia.so.0"
+    }
+}
+""")
+
+# Configure MuJoCo to use the EGL rendering backend (requires GPU)
+print('Setting environment variable to use GPU rendering:')
+%env MUJOCO_GL=egl
+
+try:
+  print('Checking that the installation succeeded:')
+  import mujoco
+  mujoco.MjModel.from_xml_string('<mujoco/>')
+except Exception as e:
+  raise e from RuntimeError(
+      'Something went wrong during installation. Check the shell output above '
+      'for more information.\n'
+      'If using a hosted Colab runtime, make sure you enable GPU acceleration '
+      'by going to the Runtime menu and selecting "Choose runtime type".')
+
+print('Installation successful.')
+
+#@title Import packages for plotting and creating graphics
+import time
+import itertools
+import numpy as np
+from typing import Callable, NamedTuple, Optional, Union, List
+
+# Graphics and plotting.
+print('Installing mediapy:')
+!command -v ffmpeg >/dev/null || (apt update && apt install -y ffmpeg)
+!pip install -q mediapy
+import mediapy as media
+import matplotlib.pyplot as plt
+
+# More legible printing from numpy.
+np.set_printoptions(precision=3, suppress=True, linewidth=100)
+
+'''
+
