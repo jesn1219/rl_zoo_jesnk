@@ -2,7 +2,7 @@ python ./train.py \
 --env PointMaze_UMaze-v3 \
 --algo tqc \
 --wandb-project-name baselines \
---track \
+#--track \
 --save-freq 10000 \
 --save-replay-buffer \
 --env-kwargs continuing_task:False \
